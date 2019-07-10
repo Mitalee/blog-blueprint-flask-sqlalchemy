@@ -1,0 +1,85 @@
+{% import 'macros/form.html' as f with context %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Add Posts</title>
+
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <!-- <link rel="stylesheet" type="text/css" href="../static/css/styles.css"> -->
+    <style type="text/css">
+      .submitbt{
+        width: 20%;
+        height: 130%;
+        background-color: #337ab7;
+        color:white;
+        border: none;
+        border-radius: 5px; 
+      }
+      table{
+        width: 30%;
+        height: 60%;
+        margin-top: 30px;
+      }
+      table tr td{
+        padding-bottom: 10px;
+      }
+    </style>
+  </head>
+<body>
+<div>
+<ul class="nav nav-tabs">
+  <li role="presentation" ><a href="/posts">All Posts</a></li>
+</ul>
+</div>
+<!-- <div >
+  <form action="/add" method="POST" role="form">
+  <table align="center">
+    <tr>
+      <td>
+        <div class="form-group">
+          <label for="title"><strong>Post Title</strong></label>
+          <input class="form-control" id="title" name="title" placeholder="Title" required value="">
+      </div>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <div class="form-group">
+          <label for="body"><strong>Post Body</strong></label>
+          <textarea class="form-control" id="body" name="body" placeholder="Body" required rows="5">
+          </textarea>
+      </div>
+     </td>
+    </tr>
+    <tr>
+      <td align="center"><input class= "submitbt" type="submit" value="Post" /></td>
+    </tr> 
+  </table>
+  </form>
+</div> -->
+    <div class="well">
+      {% call f.form_tag('blog.add_post') %}
+        <legend>New Post</legend>
+
+        {% call f.form_group(form.title, css_class='margin-bottom',
+                             placeholder='Title') %}
+        {% endcall %}
+
+        {% call f.form_group(form.body, css_class='margin-bottom',
+                             placeholder='Body',
+                             rows='10') %}
+        {% endcall %}
+
+        <button type="submit" class="submitbt">Add Post</button>
+      {% endcall %}
+    </div>
+
+
+</body>
+</html>
