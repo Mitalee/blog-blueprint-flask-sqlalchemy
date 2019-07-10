@@ -84,6 +84,15 @@
   </form>
 {%- endmacro -%}
 
+{# Render a blog update tag that contains a CSRF token and all hidden fields. #}
+{%- macro blog_update_tag(endpoint, pid='', css_class='', method='post') -%}
+  <form action="{{ url_for(endpoint, pid=%s % pid) }}" method="{{ method }}"
+        class="{{ css_class }}" role="form">
+    {{ form.hidden_tag() }}
+    {{ caller () }}
+  </form>
+{%- endmacro -%}
+
 
 {# Render a form for searching. #}
 {%- macro search(endpoint, placeholder='Search by typing, then press enter...') -%}

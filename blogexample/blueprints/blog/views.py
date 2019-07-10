@@ -81,33 +81,38 @@ def delete_post(pid):
         print('POST IS', post)
         del_response = post.delete()
         print(del_response)
-        #if del_response.get('deleted'):
-        flash('Post has been deleted successfully.', 'success')
-        # else:
-        #     flash('Error deleting post.', 'danger')   
+        if del_response is None:
+            flash('Post has been deleted successfully.', 'success')
+        else:
+            flash('Error deleting post.', 'danger')   
         return redirect(url_for('show_posts'))
 
 
 @blog.route('/update/<pid>', methods=('GET', 'POST'))
 def update_post(pid):
-    blogpost = Post()
+    blogpost = Post.query.get(pid)
     form = AddPostForm(obj=blogpost)
 
     print('FORM IS: ',form)
     if form.validate_on_submit():
+        # blogpost = User.query.get(request.form.get('id'))
         form.populate_obj(blogpost)
+
         
-        params = {
-                'id': pid,
-                'title': blogpost.title,
-                'body': blogpost.body
-                }
-        print('PARAMS ARE: ', params)
-        if Post.create_blogpost(params):
-            flash('Post has been created successfully.', 'success')
+        # params = {
+        #         'id': pid,
+        #         'title': blogpost.title,
+        #         'body': blogpost.body
+        #         }
+        # print('PARAMS ARE: ', params)
+
+        blogresponse = blogpost.save()
+        print('BLOGRESPONSE IS: ', blogresponse)
+        if blogresponse:
+            flash('Post has been updated successfully.', 'success')
             return redirect(url_for('blog.show_posts'))
 
-    return render_template('add.html', form=form, blogpost=blogpost)
+    return render_template('update.html', form=form, blogpost=blogpost)
 #         blogpost = AddPostForm(obj=me)
 #         if request.method == 'POST':
 #             bpost = Posts.query.get(pid)
