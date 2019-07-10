@@ -44,7 +44,6 @@ def add_post():
     blogpost = Post()
     form = AddPostForm(obj=blogpost)
 
-    print('FORM IS: ',form)
     if form.validate_on_submit():
         form.populate_obj(blogpost)
 
@@ -53,7 +52,7 @@ def add_post():
                 'title': blogpost.title,
                 'body': blogpost.body
                 }
-        print('PARAMS ARE: ', params)
+        # print('PARAMS ARE: ', params)
         if Post.create_blogpost(params):
             flash('Post has been created successfully.', 'success')
             return redirect(url_for('blog.show_posts'))
@@ -61,31 +60,38 @@ def add_post():
     return render_template('add.html', form=form, blogpost=blogpost)
 
 
-@blog.route('/detail/<slug>')
-def detail(slug):
+@blog.route('/detail/<url>')
+def detail(url):
     # if session.get('logged_in'):
     #     query = Entry.select()
     # else:
     #     query = Entry.public()
     # entry = get_object_or_404(query, Entry.slug == slug)
     #entry = Post.query.filter(Post.search(slug))
-    blogpost = Post.query.filter(Post.title == 'New Test blog').first()
+    #blogpost = Post.query.filter(Post.url == url).first()
 
-    print('BLOGPOST IS ', blogpost)
-    flash('Post has been shown successfully.', 'success')
+    #####WORKING
+    # search_query = "%{0}%".format(url)
+    # print('SEARCH QUERY IS: ', search_query)
+    # blogpost = Post.query.filter(Post.url.ilike(search_query)).first()
+
+    blogpost = Post.query.filter(Post.search(url)).first()
+
+    # print('BLOGPOST IS ', blogpost)
+    # flash('Post has been shown successfully.', 'success')
     return render_template('detail.html', blogpost=blogpost)
 
 @blog.route('/delete/<pid>', methods=('GET', 'POST'))
 def delete_post(pid):
-        post = Post.query.get(pid)
-        print('POST IS', post)
-        del_response = post.delete()
-        print(del_response)
-        if del_response is None:
-            flash('Post has been deleted successfully.', 'success')
-        else:
-            flash('Error deleting post.', 'danger')   
-        return redirect(url_for('show_posts'))
+    post = Post.query.get(pid)
+    print('POST IS', post)
+    del_response = post.delete()
+    print(del_response)
+    if del_response is None:
+        flash('Post has been deleted successfully.', 'success')
+    else:
+        flash('Error deleting post.', 'danger')   
+    return redirect(url_for('blog.show_posts'))
 
 
 @blog.route('/update/<pid>', methods=('GET', 'POST'))
@@ -93,18 +99,9 @@ def update_post(pid):
     blogpost = Post.query.get(pid)
     form = AddPostForm(obj=blogpost)
 
-    print('FORM IS: ',form)
     if form.validate_on_submit():
         # blogpost = User.query.get(request.form.get('id'))
         form.populate_obj(blogpost)
-
-        
-        # params = {
-        #         'id': pid,
-        #         'title': blogpost.title,
-        #         'body': blogpost.body
-        #         }
-        # print('PARAMS ARE: ', params)
 
         blogresponse = blogpost.save()
         print('BLOGRESPONSE IS: ', blogresponse)
@@ -113,13 +110,3 @@ def update_post(pid):
             return redirect(url_for('blog.show_posts'))
 
     return render_template('update.html', form=form, blogpost=blogpost)
-#         blogpost = AddPostForm(obj=me)
-#         if request.method == 'POST':
-#             bpost = Posts.query.get(pid)
-#             bpost.title = blogpost.title.data
-#             bpost.description = blogpost.description.data
-#             db.session.commit()
-#             return redirect(url_for('show_posts'))
-#         return render_template('update.html', blogpost=blogpost)
-#     flash('You are not a valid user to Edit this Post')
-#     return redirect(url_for('show_posts'))

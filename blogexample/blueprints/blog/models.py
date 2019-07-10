@@ -79,7 +79,7 @@ class Post(ResourceMixin, db.Model):
         if query == '':
             return text('')
 
-        search_query = '%{0}%'.format(query)
+        search_query = "%{0}%".format(query)
         print('SEARCH QUERY IS:', search_query)
 
         post = or_(Post.url.ilike(search_query))
