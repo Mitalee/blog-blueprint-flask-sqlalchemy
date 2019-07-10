@@ -5,9 +5,6 @@ from sqlalchemy import text
 from . import blog
 from .models import Post#, Tag
 from .forms import AddPostForm
-#celery = create_celery_app()
-
-
 
 
 @blog.route('/')

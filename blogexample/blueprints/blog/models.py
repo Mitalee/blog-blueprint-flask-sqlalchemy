@@ -12,6 +12,13 @@ from lib.util_sqlalchemy import ResourceMixin, AwareDateTime
 from blogexample.app import db
 
 
+# https://stackoverflow.com/questions/25668092/flask-sqlalchemy-many-to-many-insert-data
+post_tags_table = db.Table('post_tags',
+    db.Column('post_id', db.Integer, db.ForeignKey('posts.id')),    ##ORDER IS IMPORTANT!!! 
+    db.Column('tag_id', db.Integer, db.ForeignKey('tags.id'))       ##PARENT FIRST, CHILD NEXT
+    )
+
+
 class Post(ResourceMixin, db.Model):
 
     __tablename__ = 'posts'
@@ -23,9 +30,10 @@ class Post(ResourceMixin, db.Model):
     # time = DateTimeField(default=datetime.now)
     url = db.Column(db.String(128), nullable=False, unique=True)
     visible = db.Column(db.Boolean(), index=True, nullable=False, server_default='1')
-  #  tags = db.relationship('Tag', secondary=tags, lazy='subquery',
-                                # backref=db.backref('posts', lazy=True))
 
+    # tags_id = db.Column(db.Integer, db.ForeignKey('tag.id'))
+    tags = db.relationship('Tag', secondary=post_tags_table)#, backref=db.backref('post_tags_table', lazy='dynamic'))
+    #tags = db.relationship('Tag', secondary=wiki_tags_table, backref=db.backref('wiki_tags_table', lazy='dynamic'))
     #@staticmethod
     @classmethod
     def create_url(cls, line):
@@ -34,13 +42,13 @@ class Post(ResourceMixin, db.Model):
         line = line.replace(" ","_").lower()
         return line
 
-    def addTag(self,tag):
-        tag = tag.strip().replace(" ","_").lower()
-        try:
-            db_tag = Tag.get(Tag.tag==tag)
-        except Tag.DoesNotExist:    
-            db_tag = Tag(tag=tag)
-            db_tag.save()
+    # def addTag(self,tag):
+    #     tag = tag.strip().replace(" ","_").lower()
+    #     try:
+    #         db_tag = Tag.get(Tag.tag==tag)
+    #     except Tag.DoesNotExist:    
+    #         db_tag = Tag(tag=tag)
+    #         db_tag.save()
 
         # db_post_to_tag = Post_To_Tag(tag = db_tag,post = self)
         # db_post_to_tag.save()
@@ -86,16 +94,12 @@ class Post(ResourceMixin, db.Model):
         print('POST SEARCHED IS:', post)
         return post
 
-# class Tag(ResourceMixin, db.Model):
+class Tag(ResourceMixin, db.Model):
 
-#     __tablename__ = 'tags'
-#     id = db.Column(db.Integer, primary_key=True)
-#     tag = db.Column(db.String(64), unique=True)
+    __tablename__ = 'tags'
+    id = db.Column(db.Integer, primary_key=True)
+    tag = db.Column(db.String(64), unique=True)
 
-# tags = db.Table('tags',
-#     db.Column('tag_id', db.Integer, db.ForeignKey('tag.id'), primary_key=True),
-#     db.Column('post_id', db.Integer, db.ForeignKey('post.id'), primary_key=True)
-# )
 
 # class Post_To_Tag(ResourceMixin, db.Model):
 #     post = ForeignKeyField(Post)
