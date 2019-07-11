@@ -56,7 +56,8 @@
         <button type="submit" class="submitbt">Update Post</button>
       {% endcall %}
     </div>
-
+  {{ ckeditor.load() }}
+  {{ ckeditor.config(name='body') }}
 
 </body>
 </html>

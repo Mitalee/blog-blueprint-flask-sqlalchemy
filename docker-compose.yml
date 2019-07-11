@@ -15,6 +15,7 @@ services:
     command: >
         gunicorn -b 0.0.0.0:8000
         --access-logfile -
+        --log-level=debug
         --reload
         "blogexample.app:create_app()"
     env_file:

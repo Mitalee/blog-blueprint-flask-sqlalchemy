@@ -5,8 +5,12 @@ from flask_sqlalchemy import SQLAlchemy
 
 from werkzeug.debug import DebuggedApplication
 
+# from flask_ckeditor import CKEditor#, CKEditorField
+
 
 db = SQLAlchemy()
+# ckeditor = CKEditor()
+
 
 def create_app(main=True, debug=True):
     """Create an application."""
@@ -20,6 +24,7 @@ def create_app(main=True, debug=True):
     app.register_blueprint(blog)
     
     db.init_app(app)
+    # ckeditor.init_app(app)
 
     if app.debug:
         app.wsgi_app = DebuggedApplication(app.wsgi_app, evalex=True)

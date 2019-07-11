@@ -15,4 +15,7 @@ Flask-WTF==0.14.2
 WTForms-Components==0.10.4
 WTForms-Alchemy==0.16.9
 
+#rich-text
+flask_ckeditor
+
 pytz

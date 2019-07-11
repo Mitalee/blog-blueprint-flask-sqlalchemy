@@ -29,7 +29,7 @@
 {% endwith %}
 <div>
     <h3>{{blogpost.title}}</h3>
-     <p>{{blogpost.body}}</p> 
+     <p>{{ blogpost.body|safe }}</p> 
  </div>
 </body>
 </html>

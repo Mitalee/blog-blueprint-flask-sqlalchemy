@@ -63,7 +63,7 @@
       <a class="glyphicon glyphicon-trash" id="del" href="/delete/{{ i.id }}"></a>
     </div>
   </div>
-  <div class="panel-body"><p>{{i.body}}</p> 
+  <div class="panel-body"><p>{{ i.body|safe }}</p> 
       <p>Last updated: {{ i.updated_on.strftime('%m/%d/%Y') }}</p>
   </div>
 </div>

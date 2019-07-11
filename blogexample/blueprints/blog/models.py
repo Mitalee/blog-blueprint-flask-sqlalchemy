@@ -94,6 +94,10 @@ class Post(ResourceMixin, db.Model):
         print('POST SEARCHED IS:', post)
         return post
 
+    @classmethod
+    def drafts(cls):
+        return Entry.select().where(Post.visible == False)
+
 class Tag(ResourceMixin, db.Model):
 
     __tablename__ = 'tags'

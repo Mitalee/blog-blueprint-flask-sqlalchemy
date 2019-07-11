@@ -24,6 +24,11 @@ def show_posts():
     print('ALL POSTS ARE', posts)
     return render_template('posts.html', posts=posts)
 
+@blog.route('/drafts')
+def drafts():
+    posts = Post.drafts().order_by(Post.updated_on.desc())
+    #return object_list('index.html', query)
+    return render_template('posts.html', posts=posts)
 
 @blog.route('/add', methods=['GET', 'POST'])
 def add_post():
@@ -65,11 +70,11 @@ def detail(url):
     # blogpost = Post.query.filter(Post.url.ilike(search_query)).first()
 
     blogpost = Post.query.filter(Post.search(url)).first()
-    tags = string_to_tag_list(blogpost.tags)
+    #tags = string_to_tag_list(blogpost.tags)
 
     # print('BLOGPOST IS ', blogpost)
     # flash('Post has been shown successfully.', 'success')
-    return render_template('detail.html', blogpost=blogpost, tags=tags)
+    return render_template('detail.html', blogpost=blogpost)#, tags=tags)
 
 @blog.route('/delete/<pid>', methods=('GET', 'POST'))
 def delete_post(pid):
@@ -102,7 +107,7 @@ def update_post(pid):
     return render_template('update.html', form=form, blogpost=blogpost)
 
 
-@blog.route(Routes.view_tag)
+@blog.route('/view_tag')
 def view_tag(tag):
   try:
     tag_id = Tag.get(Tag.tag == tag.lower())
