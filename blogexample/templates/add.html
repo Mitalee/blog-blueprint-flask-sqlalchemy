@@ -11,18 +11,20 @@
       <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-    <script src="http://js.nicedit.com/nicEdit-latest.js" type="text/javascript"></script>
+<!--     <script src="http://js.nicedit.com/nicEdit-latest.js" type="text/javascript"></script>
     <script type="text/javascript">
         bkLib.onDomLoaded(function() { nicEditors.allTextAreas() }); // this method will transform all textares to rich text editors
  
-        // bkLib.onDomLoaded(function() {
-        //      new nicEditor().panelInstance('area1');
-        // }); // this will transform textarea with id txt only
+        bkLib.onDomLoaded(function() {
+             new nicEditor().panelInstance('area1');
+        }); // this will transform textarea with id txt only
  
-        // bkLib.onDomLoaded(function() {
-        //      new nicEditor({fullPanel : true}).panelInstance('area2');
-        // }); // convert text area with id txt2 to rich text editor with all options.
-    </script>
+        bkLib.onDomLoaded(function() {
+             new nicEditor({fullPanel : true}).panelInstance('area2');
+        }); // convert text area with id txt2 to rich text editor with all options.
+    </script> -->
+
+    <script src="https://cdn.ckeditor.com/4.12.1/full/ckeditor.js"></script>
     <!-- <link rel="stylesheet" type="text/css" href="../static/css/styles.css"> -->
     <style type="text/css">
       .submitbt{
@@ -49,32 +51,6 @@
   <li role="presentation" ><a href="/posts">All Posts</a></li>
 </ul>
 </div>
-<!-- <div >
-  <form action="/add" method="POST" role="form">
-  <table align="center">
-    <tr>
-      <td>
-        <div class="form-group">
-          <label for="title"><strong>Post Title</strong></label>
-          <input class="form-control" id="title" name="title" placeholder="Title" required value="">
-      </div>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <div class="form-group">
-          <label for="body"><strong>Post Body</strong></label>
-          <textarea class="form-control" id="body" name="body" placeholder="Body" required rows="5">
-          </textarea>
-      </div>
-     </td>
-    </tr>
-    <tr>
-      <td align="center"><input class= "submitbt" type="submit" value="Post" /></td>
-    </tr> 
-  </table>
-  </form>
-</div> -->
     <div class="well">
       {% call f.form_tag('blog.add_post') %}
         <legend>New Post</legend>
@@ -91,8 +67,8 @@
         <button type="submit" class="submitbt">Add Post</button>
       {% endcall %}
     </div>
-  {{ ckeditor.load() }}
-  {{ ckeditor.config(name='body') }}
-
+    <script>
+            CKEDITOR.replace( 'body' );
+    </script>
 </body>
 </html>

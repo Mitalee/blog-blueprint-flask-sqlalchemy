@@ -39,7 +39,7 @@ class Post(ResourceMixin, db.Model):
     def create_url(cls, line):
         line = re.sub(r"[^\w\s]", "", line).strip()
         line = line[:64].strip()
-        line = line.replace(" ","_").lower()
+        line = line.replace(" ","-").lower()
         return line
 
     # def addTag(self,tag):
