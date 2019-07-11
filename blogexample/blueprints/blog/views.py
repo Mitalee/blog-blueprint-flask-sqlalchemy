@@ -59,24 +59,17 @@ def add_post():
 
 @blog.route('/detail/<url>')
 def detail(url):
-    # if session.get('logged_in'):
-    #     query = Entry.select()
-    # else:
-    #     query = Entry.public()
-    # entry = get_object_or_404(query, Entry.slug == slug)
-    #entry = Post.query.filter(Post.search(slug))
-    #blogpost = Post.query.filter(Post.url == url).first()
-
     #####WORKING
     # search_query = "%{0}%".format(url)
     # print('SEARCH QUERY IS: ', search_query)
     # blogpost = Post.query.filter(Post.url.ilike(search_query)).first()
 
     blogpost = Post.query.filter(Post.search(url)).first()
+    tags = string_to_tag_list(blogpost.tags)
 
     # print('BLOGPOST IS ', blogpost)
     # flash('Post has been shown successfully.', 'success')
-    return render_template('detail.html', blogpost=blogpost)
+    return render_template('detail.html', blogpost=blogpost, tags=tags)
 
 @blog.route('/delete/<pid>', methods=('GET', 'POST'))
 def delete_post(pid):
@@ -107,3 +100,15 @@ def update_post(pid):
             return redirect(url_for('blog.show_posts'))
 
     return render_template('update.html', form=form, blogpost=blogpost)
+
+
+@blog.route(Routes.view_tag)
+def view_tag(tag):
+  try:
+    tag_id = Tag.get(Tag.tag == tag.lower())
+  except Tag.DoesNotExist:
+    return render_posts(None, tag = tag.lower())
+
+  posts = [x.post for x in Post_To_Tag.select().where(Post_To_Tag.tag == tag_id).join(Post).where(Post.visible == True).order_by(Post.time.desc()) ]
+
+  return render_posts(posts, tag = tag.lower())
