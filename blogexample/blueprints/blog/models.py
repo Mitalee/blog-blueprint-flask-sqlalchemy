@@ -32,7 +32,7 @@ class Post(ResourceMixin, db.Model):
     visible = db.Column(db.Boolean(), index=True, nullable=False, server_default='1')
 
     # tags_id = db.Column(db.Integer, db.ForeignKey('tag.id'))
-    tags = db.relationship('Tag', secondary=post_tags_table)#, backref=db.backref('post_tags_table', lazy='dynamic'))
+    tags = db.relationship('Tag', secondary=post_tags_table, backref=db.backref('post_tags_table', lazy='dynamic'))
     #tags = db.relationship('Tag', secondary=wiki_tags_table, backref=db.backref('wiki_tags_table', lazy='dynamic'))
     #@staticmethod
     @classmethod
@@ -42,21 +42,30 @@ class Post(ResourceMixin, db.Model):
         line = line.replace(" ","-").lower()
         return line
 
-    def addTag(self,tag):
+    def addTag(self, tag):
+        print('TAG IS: ', tag)
         tag = tag.strip().replace(" ","_").lower()
-        try:
-            db_tag = Tag.get(Tag.tag==tag)
-        except Tag.DoesNotExist:    
+        db_tag = Tag.query.filter(Tag.tag == tag).first()
+        print('DB TAG IS: ', db_tag)
+        
+        if db_tag is None:   
             db_tag = Tag(tag=tag)
-            #db_tag.save()
+            db_tag.save()
 
         #add to many-to-many table
         #db_post_to_tag = post_tags_table(tag = db_tag,post = self)
         #db_post_to_tag.save()
 
         self.tags.append(db_tag)
-        db.session.commit()
+        # db.session.commit()
 
+    @classmethod
+    def string_to_tag_list(cls, tagstring):
+        if len(tagstring.replace(",", "").strip()) > 0:
+            tags = [x.strip().replace(" ","_") for x in tagstring.split(",") if len(x.strip())>0]
+            return tags
+        else:
+            return None
 
 
     @classmethod
@@ -70,11 +79,22 @@ class Post(ResourceMixin, db.Model):
         }
         :return: bool
         """
-        blog_params = params
+        print('PARAMS ARE: ', params)
+        blog_params = {}
+        blog_params['title'] = params['title']
+        blog_params['body'] = params['body']
         blog_params['url'] = Post.create_url(params['title'])
 
         print('CREATING BLOG POST NOW with params', blog_params)
         post = Post(**blog_params)
+
+        taglist = Post.string_to_tag_list(params['tags'])
+        print('TAGLIST IS: ', taglist)
+        if taglist is None:
+            post.addTag("untagged")
+        else:
+            for newtag in taglist:
+                post.addTag(newtag)
 
         db.session.add(post)
         db.session.commit()
@@ -102,11 +122,11 @@ class Post(ResourceMixin, db.Model):
 
     @classmethod
     def drafts(cls):
-        return Post.select().where(Post.visible == False)
+        return Post.query.filter(not Post.visible)
 
     @classmethod
     def published(cls):
-        return Post.select().where(Post.visible == True)
+        return Post.query.filter(Post.visible)
 
 class Tag(ResourceMixin, db.Model):
 

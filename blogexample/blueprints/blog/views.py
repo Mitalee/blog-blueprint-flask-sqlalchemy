@@ -52,15 +52,15 @@ def add_post():
     blogpost = Post()
     form = AddPostForm(obj=blogpost)
 
+    # print('TAGS ARE: ',type(request.form["tags"]))
     if form.validate_on_submit():
-        form.populate_obj(blogpost)
-
-        
+        # form.populate_obj(blogpost)
         params = {
-                'title': blogpost.title,
-                'body': blogpost.body
+                'title': request.form['title'],#blogpost.title,
+                'body': request.form['body'],#blogpost.body,
+                'tags': request.form['tags']#string_to_tag_list(blogpost.tags)
                 }
-        # print('PARAMS ARE: ', params)
+        print('PARAMS ARE: ', params)
         if Post.create_blogpost(params):
             flash('Post has been created successfully.', 'success')
             return redirect(url_for('blog.show_posts'))
@@ -76,11 +76,11 @@ def detail(url):
     # blogpost = Post.query.filter(Post.url.ilike(search_query)).first()
 
     blogpost = Post.query.filter(Post.search(url)).first()
-    tags = string_to_tag_list(blogpost.tags)
+    print('TAGS ARE: ', blogpost.tags)
 
     # print('BLOGPOST IS ', blogpost)
     # flash('Post has been shown successfully.', 'success')
-    return render_template('detail.html', blogpost=blogpost, tags=tags)
+    return render_template('detail.html', blogpost=blogpost)#, tags=tags)
 
 @blog.route('/delete/<pid>', methods=('GET', 'POST'))
 def delete_post(pid):
@@ -98,6 +98,17 @@ def delete_post(pid):
 @blog.route('/update/<pid>', methods=('GET', 'POST'))
 def update_post(pid):
     blogpost = Post.query.get(pid)
+    print('TAGS ARE: ', type(blogpost.tags))
+    taglist = ''
+    for tag in blogpost.tags:
+        # print('TAG IS: ', tag.tag)
+        # ','.join(tag.tag)
+        taglist = taglist+','+tag.tag
+
+    print('TAGLIST IS: ', taglist)
+
+    blogpost.tags = taglist
+    print('BLOGPOST TAGS NOW ARE: ', blogpost.tags)
     form = AddPostForm(obj=blogpost)
 
     if form.validate_on_submit():
@@ -130,18 +141,21 @@ def string_to_tag_list(string):
         return tags
     else:
         return []
+def tag_list_to_string(taglist):
+    for tag in taglist:
+        ''.join(", "+tag)
 
-def tag(post):
-    if validate_form_field(request.form,"tags"):
-        tags = request.form["tags"]
-        if len(tags.replace(",","").strip())>0:
-            tags = [ x.strip() for x in tags.split(",") if len(x.strip())>0]
-            for tag in tags:
-                post.addTag(tag)
-        else:
-            post.addTag("untagged")
-    else:
-        post.addTag("untagged")
+# def tag(post):
+#     if validate_form_field(request.form,"tags"):
+#         tags = request.form["tags"]
+#         if len(tags.replace(",","").strip())>0:
+#             tags = [ x.strip() for x in tags.split(",") if len(x.strip())>0]
+#             for tag in tags:
+#                 post.addTag(tag)
+#         else:
+#             post.addTag("untagged")
+#     else:
+#         post.addTag("untagged")
 
-def validate_form_field(form,field):
-    return True if len(form[field].strip()) > 0 else False
+# def validate_form_field(form,field):
+#     return True if len(form[field].strip()) > 0 else False
