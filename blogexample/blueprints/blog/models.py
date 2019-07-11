@@ -42,16 +42,22 @@ class Post(ResourceMixin, db.Model):
         line = line.replace(" ","-").lower()
         return line
 
-    # def addTag(self,tag):
-    #     tag = tag.strip().replace(" ","_").lower()
-    #     try:
-    #         db_tag = Tag.get(Tag.tag==tag)
-    #     except Tag.DoesNotExist:    
-    #         db_tag = Tag(tag=tag)
-    #         db_tag.save()
+    def addTag(self,tag):
+        tag = tag.strip().replace(" ","_").lower()
+        try:
+            db_tag = Tag.get(Tag.tag==tag)
+        except Tag.DoesNotExist:    
+            db_tag = Tag(tag=tag)
+            #db_tag.save()
 
-        # db_post_to_tag = Post_To_Tag(tag = db_tag,post = self)
-        # db_post_to_tag.save()
+        #add to many-to-many table
+        #db_post_to_tag = post_tags_table(tag = db_tag,post = self)
+        #db_post_to_tag.save()
+
+        self.tags.append(db_tag)
+        db.session.commit()
+
+
 
     @classmethod
     def create_blogpost(cls, params):
@@ -96,7 +102,11 @@ class Post(ResourceMixin, db.Model):
 
     @classmethod
     def drafts(cls):
-        return Entry.select().where(Post.visible == False)
+        return Post.select().where(Post.visible == False)
+
+    @classmethod
+    def published(cls):
+        return Post.select().where(Post.visible == True)
 
 class Tag(ResourceMixin, db.Model):
 

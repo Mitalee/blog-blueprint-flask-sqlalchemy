@@ -25,6 +25,7 @@
     </script> -->
 
     <script src="https://cdn.ckeditor.com/4.12.1/full/ckeditor.js"></script>
+    <!-- <script src="https://cdn.ckeditor.com/ckeditor5/12.3.0/classic/ckeditor.js"></script> -->
     <!-- <link rel="stylesheet" type="text/css" href="../static/css/styles.css"> -->
     <style type="text/css">
       .submitbt{
@@ -63,12 +64,27 @@
                              placeholder='Body',
                              rows='10') %}
         {% endcall %}
+        
+        {% call f.form_group(form.tags, css_class='margin-bottom',
+                             placeholder="Add tags separated by a ','") %}
+        {% endcall %}
+
+        {% call f.form_group(form.visible) %}
+        {% endcall %}
 
         <button type="submit" class="submitbt">Add Post</button>
       {% endcall %}
     </div>
     <script>
             CKEDITOR.replace( 'body' );
+            // ClassicEditor
+            // .create( document.querySelector( '#body' ) )
+            // .then( editor => {
+            //         console.log( editor );
+            // } )
+            // .catch( error => {
+            //         console.error( error );
+            // } );
     </script>
 </body>
 </html>

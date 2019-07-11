@@ -53,6 +53,13 @@
                              placeholder='Body',
                              rows='10') %}
         {% endcall %}
+        
+        {% call f.form_group(form.tags, css_class='margin-bottom',
+                             placeholder="Add tags separated by a ','") %}
+        {% endcall %}
+
+        {% call f.form_group(form.visible) %}
+        {% endcall %}
 
         <button type="submit" class="submitbt">Update Post</button>
       {% endcall %}

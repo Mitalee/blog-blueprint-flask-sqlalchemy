@@ -3,7 +3,7 @@ from flask import render_template, redirect, url_for, flash, request
 from sqlalchemy import text
 
 from . import blog
-from .models import Post#, Tag
+from .models import Post, Tag, post_tags_table
 from .forms import AddPostForm
 
 
@@ -22,6 +22,12 @@ def show_posts():
     # return redirect(url_for('index'))
     posts = Post.query.all()
     print('ALL POSTS ARE', posts)
+    return render_template('posts.html', posts=posts)
+
+@blog.route('/blog')
+def published():
+    posts = Post.published().order_by(Post.updated_on.desc())
+    #return object_list('index.html', query)
     return render_template('posts.html', posts=posts)
 
 @blog.route('/drafts')
@@ -70,11 +76,11 @@ def detail(url):
     # blogpost = Post.query.filter(Post.url.ilike(search_query)).first()
 
     blogpost = Post.query.filter(Post.search(url)).first()
-    #tags = string_to_tag_list(blogpost.tags)
+    tags = string_to_tag_list(blogpost.tags)
 
     # print('BLOGPOST IS ', blogpost)
     # flash('Post has been shown successfully.', 'success')
-    return render_template('detail.html', blogpost=blogpost)#, tags=tags)
+    return render_template('detail.html', blogpost=blogpost, tags=tags)
 
 @blog.route('/delete/<pid>', methods=('GET', 'POST'))
 def delete_post(pid):
@@ -107,13 +113,35 @@ def update_post(pid):
     return render_template('update.html', form=form, blogpost=blogpost)
 
 
-@blog.route('/view_tag')
+@blog.route('/tag/<tag>')
 def view_tag(tag):
-  try:
-    tag_id = Tag.get(Tag.tag == tag.lower())
-  except Tag.DoesNotExist:
-    return render_posts(None, tag = tag.lower())
+    try:
+        tag_id = Tag.get(Tag.tag == tag.lower())
+    except Tag.DoesNotExist:
+        return render_posts(None, tag = tag.lower())
 
-  posts = [x.post for x in Post_To_Tag.select().where(Post_To_Tag.tag == tag_id).join(Post).where(Post.visible == True).order_by(Post.time.desc()) ]
+    posts = [x.post for x in post_tags_table.select().where(post_tags_table.tag == tag_id).join(Post).where(Post.visible == True).order_by(Post.time.desc()) ]
 
-  return render_posts(posts, tag = tag.lower())
+    return render_posts(posts, tag = tag.lower())
+
+def string_to_tag_list(string):
+    if len(string.replace(",", "").strip()) > 0:
+        tags = [x.strip().replace(" ","_") for x in string.split(",") if len(x.strip())>0]
+        return tags
+    else:
+        return []
+
+def tag(post):
+    if validate_form_field(request.form,"tags"):
+        tags = request.form["tags"]
+        if len(tags.replace(",","").strip())>0:
+            tags = [ x.strip() for x in tags.split(",") if len(x.strip())>0]
+            for tag in tags:
+                post.addTag(tag)
+        else:
+            post.addTag("untagged")
+    else:
+        post.addTag("untagged")
+
+def validate_form_field(form,field):
+    return True if len(form[field].strip()) > 0 else False
