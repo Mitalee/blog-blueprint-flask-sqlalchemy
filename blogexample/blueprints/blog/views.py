@@ -4,7 +4,7 @@ from sqlalchemy import text
 
 from . import blog
 from .models import Post, Tag, post_tags_table
-from .forms import AddPostForm
+from .forms import AddPostForm, UpdatePostForm
 
 
 @blog.route('/')
@@ -99,17 +99,20 @@ def delete_post(pid):
 def update_post(pid):
     blogpost = Post.query.get(pid)
     print('TAGS ARE: ', type(blogpost.tags))
-    taglist = ''
-    for tag in blogpost.tags:
-        # print('TAG IS: ', tag.tag)
-        # ','.join(tag.tag)
-        taglist = taglist+','+tag.tag
+    # taglist = ''
+    # for tag in blogpost.tags:
+    #     # print('TAG IS: ', tag.tag)
+    #     # ','.join(tag.tag)
+    #     taglist = taglist+', '+tag.tag
+
+    taglist = ''.join(t.tag for t in blogpost.tags)
 
     print('TAGLIST IS: ', taglist)
 
-    blogpost.tags = taglist
+    # blogpost.tags = taglist
     print('BLOGPOST TAGS NOW ARE: ', blogpost.tags)
-    form = AddPostForm(obj=blogpost)
+    blogpost.taglist = taglist
+    form = UpdatePostForm(obj=blogpost)
 
     if form.validate_on_submit():
         # blogpost = User.query.get(request.form.get('id'))
@@ -121,7 +124,7 @@ def update_post(pid):
             flash('Post has been updated successfully.', 'success')
             return redirect(url_for('blog.show_posts'))
 
-    return render_template('update.html', form=form, blogpost=blogpost)
+    return render_template('update.html', form=form, blogpost=blogpost)#, taglist=taglist)
 
 
 @blog.route('/tag/<tag>')

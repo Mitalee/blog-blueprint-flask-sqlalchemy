@@ -100,6 +100,38 @@ class Post(ResourceMixin, db.Model):
         db.session.commit()
 
         return True
+    @classmethod
+    def update_blogpost(cls, params):
+        """
+        Return whether or not the blogpost was created successfully.
+        params are in admin/views/coupons_new
+        params = {
+            'title': coupon.code,
+            'body': coupon.duration,
+        }
+        :return: bool
+        """
+        print('PARAMS ARE: ', params)
+        blog_params = {}
+        blog_params['title'] = params['title']
+        blog_params['body'] = params['body']
+        blog_params['url'] = Post.create_url(params['title'])
+
+        print('CREATING BLOG POST NOW with params', blog_params)
+        post = Post(**blog_params)
+
+        taglist = Post.string_to_tag_list(params['tags'])
+        print('TAGLIST IS: ', taglist)
+        if taglist is None:
+            post.addTag("untagged")
+        else:
+            for newtag in taglist:
+                post.addTag(newtag)
+
+        db.session.add(post)
+        db.session.commit()
+
+        return True
 
     @classmethod
     def search(cls, query):
