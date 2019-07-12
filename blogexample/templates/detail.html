@@ -30,6 +30,10 @@
 <div>
     <h3>{{blogpost.title}}</h3>
      <p>{{ blogpost.body|safe }}</p> 
+     {% set tag_list = blogpost.tagstring.split(',') %}
+     {% for t in tag_list %} 
+      <a href="/tag/{{ t }}"> {{ t }}</a> 
+     {% endfor %}
  </div>
 </body>
 </html>

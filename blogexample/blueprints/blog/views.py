@@ -21,16 +21,6 @@ def show_posts():
     # flash('User is not Authenticated')
     # return redirect(url_for('index'))
     posts = Post.query.all()
-    print('ALL POSTS ARE', posts)
-    # for post in posts:
-    #     post_taglist = ','.join(tagobj.tag for tagobj in post.tags)
-    #     print(('Post: {0} - TAGLIST IS: {1}').format(post.id, post_taglist))
-    #     post['taglist'] = post_taglist
-    #     for tagobj in post.tags:
-    #         print('TAGOBJ.TAG IS: ', tagobj.tag)
-    for post in posts:
-        print('TAGLIST is:', post.tagstring)
-    # raise
     return render_template('posts.html', posts=posts)
 
 @blog.route('/blog')
@@ -115,17 +105,15 @@ def update_post(pid):
     print(' STRINGIFIED TAGLIST IS: ', blogpost.tagstring)
     print('BLOGPOST TAGS CURRENTLY ARE: ', blogpost.tags)
 
-    blogpost.taglist = taglist
+    #this is included here so that it can be populated after modification in the form
+    blogpost.taglist = taglist 
 
     form = UpdatePostForm(obj=blogpost)
-    print("FORM IS: ", form)
+    # print("FORM IS: ", form)
     # raise
     if form.validate_on_submit():
-        print('POPULATING OBJECT')
-        # blogpost = User.query.get(request.form.get('id'))
         form.populate_obj(blogpost)
 
-        # print('BLOGPOST TAGS UPDATED ARE: ', form.taglist.data)
         taglist = Post.string_to_tag_list(form.taglist.data)
         print('TAGLIST IS: ', taglist)
         if taglist is None:
@@ -141,6 +129,7 @@ def update_post(pid):
                     print('{0} OLDTAG IS NOT IN TAGLIST'.format(newtag))
                     blogpost.removeTag(oldtag)
 
+        ##save the blog post only after adding or removing tags from it.
         blogpost.save()
 
         ####blogresponse ends up being the whole post object
@@ -154,38 +143,8 @@ def update_post(pid):
     return render_template('update.html', form=form, blogpost=blogpost)#, taglist=taglist)
 
 
-@blog.route('/tag/<tag>')
-def view_tag(tag):
-    try:
-        tag_id = Tag.get(Tag.tag == tag.lower())
-    except Tag.DoesNotExist:
-        return render_posts(None, tag = tag.lower())
+@blog.route('/tag/<tag_requested>')
+def view_tag(tag_requested):
+    posts = Post.query.filter(Post.tags.any(Tag.tag == tag_requested))
+    return render_template('posts.html', posts=posts)
 
-    posts = [x.post for x in post_tags_table.select().where(post_tags_table.tag == tag_id).join(Post).where(Post.visible == True).order_by(Post.time.desc()) ]
-
-    return render_posts(posts, tag = tag.lower())
-
-def string_to_tag_list(string):
-    if len(string.replace(",", "").strip()) > 0:
-        tags = [x.strip().replace(" ","_") for x in string.split(",") if len(x.strip())>0]
-        return tags
-    else:
-        return []
-def tag_list_to_string(taglist):
-    for tag in taglist:
-        ''.join(", "+tag)
-
-# def tag(post):
-#     if validate_form_field(request.form,"tags"):
-#         tags = request.form["tags"]
-#         if len(tags.replace(",","").strip())>0:
-#             tags = [ x.strip() for x in tags.split(",") if len(x.strip())>0]
-#             for tag in tags:
-#                 post.addTag(tag)
-#         else:
-#             post.addTag("untagged")
-#     else:
-#         post.addTag("untagged")
-
-# def validate_form_field(form,field):
-#     return True if len(form[field].strip()) > 0 else False
