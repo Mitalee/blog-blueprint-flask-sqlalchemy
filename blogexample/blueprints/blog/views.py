@@ -26,38 +26,26 @@ def show_posts():
 @blog.route('/blog')
 def published():
     posts = Post.published().order_by(Post.updated_on.desc())
-    #return object_list('index.html', query)
     return render_template('posts.html', posts=posts)
 
 @blog.route('/drafts')
 def drafts():
     posts = Post.drafts().order_by(Post.updated_on.desc())
-    #return object_list('index.html', query)
     return render_template('posts.html', posts=posts)
 
 @blog.route('/add', methods=['GET', 'POST'])
 def add_post():
-    # if session['user_available']:
-    #     blogpost = AddPostForm(request.form)
-    #     us = User.query.filter_by(username=session['current_user']).first()
-    #     if request.method == 'POST':
-    #         bp = Posts(blogpost.title.data, blogpost.description.data, us.uid)
-    #         db.session.add(bp)
-    #         db.session.commit()
-    #         return redirect(url_for('show_posts'))
-    #     return render_template('add.html', blogpost=blogpost)
-    # flash('User is not Authenticated')
-    # return redirect(url_for('index'))
     blogpost = Post()
     form = AddPostForm(obj=blogpost)
 
     # print('TAGS ARE: ',type(request.form["tags"]))
     if form.validate_on_submit():
-        # form.populate_obj(blogpost)
+        form.populate_obj(blogpost)
         params = {
-                'title': request.form['title'],#blogpost.title,
-                'body': request.form['body'],#blogpost.body,
-                'tags': request.form['tags']#string_to_tag_list(blogpost.tags)
+                'title': blogpost.title,#request.form['title'],#
+                'body': blogpost.body,#request.form['body'],
+                'taglist': request.form['taglist'],#string_to_tag_list(blogpost.tags)
+                'visible': blogpost.visible
                 }
         print('PARAMS ARE: ', params)
         if Post.create_blogpost(params):
@@ -75,10 +63,7 @@ def detail(url):
     # blogpost = Post.query.filter(Post.url.ilike(search_query)).first()
 
     blogpost = Post.query.filter(Post.search(url)).first()
-    print('TAGS ARE: ', blogpost.tags)
 
-    # print('BLOGPOST IS ', blogpost)
-    # flash('Post has been shown successfully.', 'success')
     return render_template('detail.html', blogpost=blogpost)#, tags=tags)
 
 @blog.route('/delete/<pid>', methods=('GET', 'POST'))

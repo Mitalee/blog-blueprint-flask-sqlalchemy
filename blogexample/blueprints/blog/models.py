@@ -101,12 +101,13 @@ class Post(ResourceMixin, db.Model):
         blog_params = {}
         blog_params['title'] = params['title']
         blog_params['body'] = params['body']
+        blog_params['visible'] = params['visible']
         blog_params['url'] = Post.create_url(params['title'])
 
         print('CREATING BLOG POST NOW with params', blog_params)
         post = Post(**blog_params)
 
-        taglist = Post.string_to_tag_list(params['tags'])
+        taglist = Post.string_to_tag_list(params['taglist'])
         print('TAGLIST IS: ', taglist)
         if taglist is None:
             post.addTag("untagged")
@@ -134,12 +135,13 @@ class Post(ResourceMixin, db.Model):
         blog_params = {}
         blog_params['title'] = params['title']
         blog_params['body'] = params['body']
+        blog_params['visible'] = params['visible']
         blog_params['url'] = Post.create_url(params['title'])
 
         print('CREATING BLOG POST NOW with params', blog_params)
         post = Post(**blog_params)
 
-        taglist = Post.string_to_tag_list(params['tags'])
+        taglist = Post.string_to_tag_list(params['taglist'])
         print('TAGLIST IS: ', taglist)
         if taglist is None:
             post.addTag("untagged")
@@ -173,7 +175,7 @@ class Post(ResourceMixin, db.Model):
 
     @classmethod
     def drafts(cls):
-        return Post.query.filter(not Post.visible)
+        return Post.query.filter(Post.visible.is_(False))
 
     @classmethod
     def published(cls):
