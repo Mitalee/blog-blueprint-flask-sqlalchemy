@@ -38,6 +38,18 @@
   <li role="presentation" ><a href="/posts">All Posts</a></li>
 </ul>
 </div>
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    {% for message in messages %}
+      <h3 class="flashes" align="center" style="color:#337ab7">{{ message }}</h3>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+<div>
+  {% if form.errors %}
+    {{ form.errors }}
+{% endif %}
+</div>
 
     <div class="well">
       {% call f.form_tag('blog.update_post', pid=blogpost.id) %}

@@ -14,8 +14,8 @@ from blogexample.app import db
 
 # https://stackoverflow.com/questions/25668092/flask-sqlalchemy-many-to-many-insert-data
 post_tags_table = db.Table('post_tags',
-    db.Column('post_id', db.Integer, db.ForeignKey('posts.id')),    ##ORDER IS IMPORTANT!!! 
-    db.Column('tag_id', db.Integer, db.ForeignKey('tags.id'))       ##PARENT FIRST, CHILD NEXT
+    db.Column('post_id', db.Integer, db.ForeignKey('posts.id', ondelete='cascade'), primary_key=True),    ##ORDER IS IMPORTANT!!! 
+    db.Column('tag_id', db.Integer, db.ForeignKey('tags.id', ondelete='cascade'), primary_key=True)       ##PARENT FIRST, CHILD NEXT
     )
 
 
@@ -57,7 +57,17 @@ class Post(ResourceMixin, db.Model):
         #db_post_to_tag.save()
 
         self.tags.append(db_tag)
+        print('NEW TAG APPENDED TO POST: ', db_tag)
         # db.session.commit()
+
+    def removeTag(self, tag):
+        print('TAG IS: ', tag)
+        tag = tag.strip().replace(" ","_").lower()
+        db_tag = Tag.query.filter(Tag.tag == tag).first()
+        print('DB TAG IS: ', db_tag)
+        
+        self.tags.remove(db_tag)
+        print('NEW TAG REMOVED FROM POST: ', db_tag)
 
     @classmethod
     def string_to_tag_list(cls, tagstring):
@@ -100,6 +110,7 @@ class Post(ResourceMixin, db.Model):
         db.session.commit()
 
         return True
+
     @classmethod
     def update_blogpost(cls, params):
         """

@@ -99,31 +99,48 @@ def delete_post(pid):
 def update_post(pid):
     blogpost = Post.query.get(pid)
     print('TAGS ARE: ', type(blogpost.tags))
-    # taglist = ''
-    # for tag in blogpost.tags:
-    #     # print('TAG IS: ', tag.tag)
-    #     # ','.join(tag.tag)
-    #     taglist = taglist+', '+tag.tag
 
-    taglist = ''.join(t.tag for t in blogpost.tags)
+    taglist = ','.join(t.tag for t in blogpost.tags)
 
-    print('TAGLIST IS: ', taglist)
+    print(' STRINGIFIED TAGLIST IS: ', taglist)
+    print('BLOGPOST TAGS CURRENTLY ARE: ', blogpost.tags)
 
-    # blogpost.tags = taglist
-    print('BLOGPOST TAGS NOW ARE: ', blogpost.tags)
     blogpost.taglist = taglist
-    form = UpdatePostForm(obj=blogpost)
 
+    form = UpdatePostForm(obj=blogpost)
+    print("FORM IS: ", form)
+    # raise
     if form.validate_on_submit():
+        print('POPULATING OBJECT')
         # blogpost = User.query.get(request.form.get('id'))
         form.populate_obj(blogpost)
 
-        blogresponse = blogpost.save()
-        print('BLOGRESPONSE IS: ', blogresponse)
-        if blogresponse:
-            flash('Post has been updated successfully.', 'success')
-            return redirect(url_for('blog.show_posts'))
+        print('BLOGPOST TAGS UPDATED ARE: ', form.taglist.data)
+        taglist = Post.string_to_tag_list(form.taglist.data )
+        print('TAGLIST IS: ', taglist)
+        if taglist is None:
+            blogpost.addTag("untagged")
+        else:
+            blogpost_tagnames = [t.tag for t in blogpost.tags]
+            for newtag in taglist:
+                if newtag not in blogpost_tagnames: 
+                    print('{0} NEWTAG IS NOT IN BLOGPOST_TAGNAMES'.format(newtag))
+                    blogpost.addTag(newtag)
+            for oldtag in blogpost_tagnames:
+                if oldtag not in taglist:
+                    print('{0} OLDTAG IS NOT IN TAGLIST'.format(newtag))
+                    blogpost.removeTag(oldtag)
 
+        blogpost.save()
+
+        ####blogresponse ends up being the whole post object
+        #blogresponse = blogpost.save()
+        #print('BLOGRESPONSE IS: ', blogresponse)
+        # if blogresponse:
+
+        flash('Post has been updated successfully.', 'success')
+        return redirect(url_for('blog.show_posts'))
+  
     return render_template('update.html', form=form, blogpost=blogpost)#, taglist=taglist)
 
 
