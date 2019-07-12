@@ -35,12 +35,19 @@ class Post(ResourceMixin, db.Model):
     tags = db.relationship('Tag', secondary=post_tags_table, backref=db.backref('post_tags_table', lazy='dynamic'))
     #tags = db.relationship('Tag', secondary=wiki_tags_table, backref=db.backref('wiki_tags_table', lazy='dynamic'))
     #@staticmethod
+
+
     @classmethod
     def create_url(cls, line):
         line = re.sub(r"[^\w\s]", "", line).strip()
         line = line[:64].strip()
         line = line.replace(" ","-").lower()
         return line
+
+    @property
+    def tagstring(self):
+        return (','.join(tagobj.tag for tagobj in self.tags))
+    
 
     def addTag(self, tag):
         print('TAG IS: ', tag)
@@ -60,6 +67,7 @@ class Post(ResourceMixin, db.Model):
         print('NEW TAG APPENDED TO POST: ', db_tag)
         # db.session.commit()
 
+    #deleting CASCADE EFFECTS: https://docs.sqlalchemy.org/en/13/orm/cascades.html
     def removeTag(self, tag):
         print('TAG IS: ', tag)
         tag = tag.strip().replace(" ","_").lower()

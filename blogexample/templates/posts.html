@@ -64,6 +64,8 @@
     </div>
   </div>
   <div class="panel-body"><p>{{ i.body|safe }}</p> 
+      <p>Tags: {{ i.tagstring }}</p>
+      <p>Published: {{ i.visible }}</p>
       <p>Last updated: {{ i.updated_on.strftime('%m/%d/%Y') }}</p>
   </div>
 </div>

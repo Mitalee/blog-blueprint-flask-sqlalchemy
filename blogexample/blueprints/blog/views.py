@@ -22,6 +22,15 @@ def show_posts():
     # return redirect(url_for('index'))
     posts = Post.query.all()
     print('ALL POSTS ARE', posts)
+    # for post in posts:
+    #     post_taglist = ','.join(tagobj.tag for tagobj in post.tags)
+    #     print(('Post: {0} - TAGLIST IS: {1}').format(post.id, post_taglist))
+    #     post['taglist'] = post_taglist
+    #     for tagobj in post.tags:
+    #         print('TAGOBJ.TAG IS: ', tagobj.tag)
+    for post in posts:
+        print('TAGLIST is:', post.tagstring)
+    # raise
     return render_template('posts.html', posts=posts)
 
 @blog.route('/blog')
@@ -100,9 +109,10 @@ def update_post(pid):
     blogpost = Post.query.get(pid)
     print('TAGS ARE: ', type(blogpost.tags))
 
-    taglist = ','.join(t.tag for t in blogpost.tags)
+    taglist = ','.join(t.tag for t in blogpost.tags) # DO NOT USE TAGSTRING. IT IS A PROPERTY
+    #IF WE USE TAGSTRING, IT WON'T ALLOW POPULATING THE OBJECT VIA populate_obj as it is a property.
 
-    print(' STRINGIFIED TAGLIST IS: ', taglist)
+    print(' STRINGIFIED TAGLIST IS: ', blogpost.tagstring)
     print('BLOGPOST TAGS CURRENTLY ARE: ', blogpost.tags)
 
     blogpost.taglist = taglist
@@ -115,8 +125,8 @@ def update_post(pid):
         # blogpost = User.query.get(request.form.get('id'))
         form.populate_obj(blogpost)
 
-        print('BLOGPOST TAGS UPDATED ARE: ', form.taglist.data)
-        taglist = Post.string_to_tag_list(form.taglist.data )
+        # print('BLOGPOST TAGS UPDATED ARE: ', form.taglist.data)
+        taglist = Post.string_to_tag_list(form.taglist.data)
         print('TAGLIST IS: ', taglist)
         if taglist is None:
             blogpost.addTag("untagged")
