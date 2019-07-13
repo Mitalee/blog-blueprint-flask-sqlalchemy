@@ -53,20 +53,20 @@
   {% endif %}
 {% endwith %}
 <div class="ps">
-{% for i in posts %}
+{% for each_post in posts %}
 <div class="panel panel-info">
   <div class="panel-heading">
-    <div><h3 class="panel-title">{{i.title}}</h3></div>
+    <div><h3 class="panel-title">{{each_post.title}}</h3></div>
     <div id="icon">  
-      <a class="glyphicon glyphicon-sunglasses" href="/detail/{{ i.url }}"></a>&nbsp &nbsp
-      <a class="glyphicon glyphicon-pencil" href="/update/{{ i.id }}"></a>&nbsp &nbsp
-      <a class="glyphicon glyphicon-trash" id="del" href="/delete/{{ i.id }}"></a>
+      <a class="glyphicon glyphicon-sunglasses" href="/detail/{{ each_post.url }}"></a>&nbsp &nbsp
+      <a class="glyphicon glyphicon-pencil" href="/update/{{ each_post.id }}"></a>&nbsp &nbsp
+      <a class="glyphicon glyphicon-trash" id="del" href="/delete/{{ each_post.id }}"></a>
     </div>
   </div>
-  <div class="panel-body"><p>{{ i.body|safe }}</p> 
-      <p>Tags: {{ i.tagstring }}</p>
-      <p>Published: {{ i.visible }}</p>
-      <p>Last updated: {{ i.updated_on.strftime('%m/%d/%Y') }}</p>
+  <div class="panel-body"><p>{{ each_post.body|safe }}</p> 
+      <p>Tags: {{ each_post.tagstring }}</p>
+      <p>Published: {{ each_post.visible }}</p>
+      <p>Last updated: {{ each_post.updated_on.strftime('%m/%d/%Y') }}</p>
   </div>
 </div>
 {% endfor %} 

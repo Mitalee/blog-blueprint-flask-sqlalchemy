@@ -25,8 +25,9 @@ class Post(ResourceMixin, db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(128), nullable=False)
-   # short_description = db.Column(db.String())
+    #short_description = db.Column(db.String())
     body = db.Column(db.String(), nullable=False)
+
     # time = DateTimeField(default=datetime.now)
     url = db.Column(db.String(128), nullable=False, unique=True)
     visible = db.Column(db.Boolean(), index=True, nullable=False, server_default='1')

@@ -16,9 +16,6 @@ set up sqlalchemy url here
 
 Build a model (Posts, Tags, Comments)
 
-Run a migration
-```docker-compose exec --user "$(id -u):$(id -g)" website alembic revision -m "create foo table"```
-it should be written out to migrations/versions folder with the template used from script.mako
 
 autogenerate a migration
 ```docker-compose exec --user "$(id -u):$(id -g)" website alembic revision --autogenerate -m "create foo table"```
