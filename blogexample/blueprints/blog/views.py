@@ -45,7 +45,8 @@ def add_post():
                 'title': blogpost.title,#request.form['title'],#
                 'body': blogpost.body,#request.form['body'],
                 'taglist': request.form['taglist'],#string_to_tag_list(blogpost.tags)
-                'visible': blogpost.visible
+                'visible': blogpost.visible,
+                "name": blogpost.name.strip()
                 }
         print('PARAMS ARE: ', params)
         if Post.create_blogpost(params):

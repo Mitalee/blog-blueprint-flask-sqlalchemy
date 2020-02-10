@@ -1,75 +1,83 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+
+<head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <title>Posts</title>
-   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 
     <link rel="stylesheet" type="text/css" href="../static/css/styles.css">
     <style type="text/css">
-      #us{
-        float: right;
-        margin-right: 20px;
-        margin-top: 10px;
-      }
-      #us h3{
-        margin: 0 0 0 0;
-      }
-      .ps{
-        width: 60%;
-        margin-top: 20px;
-        margin-left: 20%
-      }
-      #icon{
-        float: right;
-        margin-top: -15px;
-      }
-      #signout{
-        width: 100px;
-        height: 20px;
-      }
-      #signout a{
-        padding: 2px 0px 2px 20px;
-      }
+        #us {
+            float: right;
+            margin-right: 20px;
+            margin-top: 10px;
+        }
+        
+        #us h3 {
+            margin: 0 0 0 0;
+        }
+        
+        .ps {
+            width: 60%;
+            margin-top: 20px;
+            margin-left: 20%
+        }
+        
+        #icon {
+            float: right;
+            margin-top: -15px;
+        }
+        
+        #signout {
+            width: 100px;
+            height: 20px;
+        }
+        
+        #signout a {
+            padding: 2px 0px 2px 20px;
+        }
     </style>
-  </head>
+</head>
+
 <body>
-<div>
-<ul class="nav nav-tabs">
-  <li role="presentation"><a href="/add">Add Posts</a></li>
-</ul>
-</div>
-{% with messages = get_flashed_messages() %}
-  {% if messages %}
-    {% for message in messages %}
-      <h3 class="flashes" align="center" style="color:#337ab7">{{ message }}</h3>
-    {% endfor %}
-  {% endif %}
-{% endwith %}
-<div class="ps">
-{% for each_post in posts %}
-<div class="panel panel-info">
-  <div class="panel-heading">
-    <div><h3 class="panel-title">{{each_post.title}}</h3></div>
-    <div id="icon">  
-      <a class="glyphicon glyphicon-sunglasses" href="/detail/{{ each_post.url }}"></a>&nbsp &nbsp
-      <a class="glyphicon glyphicon-pencil" href="/update/{{ each_post.id }}"></a>&nbsp &nbsp
-      <a class="glyphicon glyphicon-trash" id="del" href="/delete/{{ each_post.id }}"></a>
+    <div>
+        <ul class="nav nav-tabs">
+            <li role="presentation"><a href="/add">Add Posts</a></li>
+        </ul>
     </div>
-  </div>
-  <div class="panel-body"><p>{{ each_post.body|safe }}</p> 
-      <p>Tags: {{ each_post.tagstring }}</p>
-      <p>Published: {{ each_post.visible }}</p>
-      <p>Last updated: {{ each_post.updated_on.strftime('%m/%d/%Y') }}</p>
-  </div>
-</div>
-{% endfor %} 
-</div>    
+    {% with messages = get_flashed_messages() %} {% if messages %} {% for message in messages %}
+    <h3 class="flashes" align="center" style="color:#337ab7">{{ message }}</h3>
+    {% endfor %} {% endif %} {% endwith %}
+    <div class="ps">
+        {% for each_post in posts %}
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <div>
+                    <h3 class="panel-title">{{each_post.title}}</h3>
+                </div>
+                <div id="icon">
+                    <a class="glyphicon glyphicon-sunglasses" href="/detail/{{ each_post.url }}"></a>&nbsp &nbsp
+                    <a class="glyphicon glyphicon-pencil" href="/update/{{ each_post.id }}"></a>&nbsp &nbsp
+                    <a class="glyphicon glyphicon-trash" id="del" href="/delete/{{ each_post.id }}"></a>
+                </div>
+            </div>
+            <div class="panel-body">
+                <p>{{ each_post.body|safe }}</p>
+                <p>Author: {{ each_post.name }}</p>
+                <p>Tags: {{ each_post.tagstring }}</p>
+                <p>Published: {{ each_post.visible }}</p>
+                <p>Last updated: {{ each_post.updated_on.strftime('%m/%d/%Y') }}</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
 </body>
+
 </html>

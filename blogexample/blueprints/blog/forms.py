@@ -9,6 +9,7 @@ class AddPostForm(FlaskForm):
     body = TextAreaField('Body', [DataRequired(), Length(1, 8192)])
     # tags = TextAreaField('tags', [DataRequired(), Length(3, 100)])
     taglist = StringField('taglist')
+    name = StringField("name")
     # tags = FieldList(StringField('tags'), min_entries=1)
     visible = BooleanField('Published')
     # body = CKEditorField('Body', [DataRequired(), Length(1, 8192)])

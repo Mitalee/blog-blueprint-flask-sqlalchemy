@@ -27,7 +27,7 @@ class Post(ResourceMixin, db.Model):
     title = db.Column(db.String(128), nullable=False)
     #short_description = db.Column(db.String())
     body = db.Column(db.String(), nullable=False)
-
+    name = db.Column(db.String(128))
     # time = DateTimeField(default=datetime.now)
     url = db.Column(db.String(128), nullable=False, unique=True)
     visible = db.Column(db.Boolean(), index=True, nullable=False, server_default='1')
@@ -104,7 +104,7 @@ class Post(ResourceMixin, db.Model):
         blog_params['body'] = params['body']
         blog_params['visible'] = params['visible']
         blog_params['url'] = Post.create_url(params['title'])
-
+        blog_params["name"] = params["name"]
         print('CREATING BLOG POST NOW with params', blog_params)
         post = Post(**blog_params)
 
