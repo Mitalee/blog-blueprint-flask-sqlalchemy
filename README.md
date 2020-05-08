@@ -3,7 +3,7 @@ Login/Admin related modules deliberately not implemented, and the blueprint can 
 ## Instructions
 * Run ```docker-compose up --build``` and navigate to ```http://localhost:8000``` in the browser to test it out.
 
-* To Initialize alembic run ```sudo docker-compose exec --user "$(id -u):$(id -g)" website alembic init alembic```
+* To Initialize alembic run ```docker-compose exec --user "$(id -u):$(id -g)" website alembic init blogexample/migrations```
 
 * In alembic.ini change ```script_location``` to {flask_appname}/migrations comment out sqlalchemy.url(default is 'blogexample')
 
