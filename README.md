@@ -16,3 +16,11 @@ set up sqlalchemy url here
  * After adding the model, autogenerate a migration ```sudo docker-compose exec --user "$(id -u):$(id -g)" website alembic revision --autogenerate -m "create foo table"```
 
 Finally, Get to alembic head after autogenerating a revision or to create db ```sudo docker-compose exec website alembic upgrade head```
+
+
+NOTE:
+Anyone trying it in windows OS
+After initalize alembic we need to edit  env.py  in migration folder 
+It fails saying 
+"sqlalchmey.exc.NoSuchModuleNameError:can't load Plugins:sqlalchemy.dialects:driver"
+
