@@ -133,3 +133,10 @@ def view_tag(tag_requested):
     posts = Post.query.filter(Post.tags.any(Tag.tag == tag_requested))
     return render_template('posts.html', posts=posts)
 
+@blog.route('/tag')
+def list_tag():
+    tags = Post.query.all()
+    return render_template('tags.html', tags=tags)
+
+
+
