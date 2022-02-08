@@ -121,6 +121,24 @@ class Post(ResourceMixin, db.Model):
 
         return True
 
+
+    @classmethod
+    def create_comment(cls, params):
+
+        comm_params = {}
+        comm_params['username'] = params['username']
+        comm_params['comment'] = params['comment']
+        comm_params['user_id'] = params['user_id']
+
+
+        comm_post = Comment(**comm_params)
+
+        db.session.add(comm_post)
+        db.session.commit()
+
+        return True
+
+
     @classmethod
     def update_blogpost(cls, params):
         """
@@ -187,6 +205,16 @@ class Tag(ResourceMixin, db.Model):
     __tablename__ = 'tags'
     id = db.Column(db.Integer, primary_key=True)
     tag = db.Column(db.String(64), unique=True)
+
+
+class Comment(db.Model):
+
+    __tablename__ = 'comment'
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(20), nullable=False)
+    comment = db.Column(db.String(), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('posts.id'), nullable=False)
+    posts = db.relationship('Post',  backref=db.backref('posts', cascade="all,delete",lazy=True))
 
 
 # class Post_To_Tag(ResourceMixin, db.Model):

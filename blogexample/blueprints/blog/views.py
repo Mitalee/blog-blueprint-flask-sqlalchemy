@@ -3,7 +3,7 @@ from flask import render_template, redirect, url_for, flash, request
 from sqlalchemy import text
 
 from . import blog
-from .models import Post, Tag, post_tags_table
+from .models import Post, Tag, post_tags_table, Comment
 from .forms import AddPostForm, UpdatePostForm
 
 
@@ -21,7 +21,8 @@ def show_posts():
     # flash('User is not Authenticated')
     # return redirect(url_for('index'))
     posts = Post.query.all()
-    return render_template('posts.html', posts=posts)
+    comment = Comment.query.all()
+    return render_template('posts.html', posts=posts, comment=comment)
 
 @blog.route('/blog')
 def published():
@@ -53,6 +54,28 @@ def add_post():
             return redirect(url_for('blog.show_posts'))
 
     return render_template('add.html', form=form, blogpost=blogpost)
+
+
+@blog.route('/posts', methods=['GET', 'POST'])
+def add_comment():
+
+    if request.method == 'POST':
+        username = request.form.get('username')
+        message = request.form.get('comment')
+        user_id = request.form.get('id')
+
+        params = {
+                'username': username,
+                'comment': message,
+                'user_id' : user_id
+                }
+
+        if Post.create_comment(params):
+            flash('Your comment has submitted.', 'success')
+            return redirect(url_for('blog.show_posts'))
+
+
+    return render_template('posts.html')
 
 
 @blog.route('/detail/<url>')
