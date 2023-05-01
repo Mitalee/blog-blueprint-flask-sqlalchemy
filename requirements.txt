@@ -1,4 +1,4 @@
-Flask==1.0.2
+Flask==2.3.2
 werkzeug==0.15.3
 
 # Application server for both development and production.
