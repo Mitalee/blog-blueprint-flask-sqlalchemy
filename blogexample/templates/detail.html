@@ -15,6 +15,17 @@
 
   </head>
 <body>
+<!-- Load Facebook SDK for JavaScript -->
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v3.0";
+  fjs.parentNode.insertBefore(js, fjs);
+  }(document, 'script', 'facebook-jssdk'));
+</script>
+
 <div>
 <ul class="nav nav-tabs">
   <li role="presentation"><a href="/posts">All Posts</a></li>
@@ -34,6 +45,18 @@
      {% for t in tag_list %} 
       <a href="/tag/{{ t }}"> {{ t }}</a> 
      {% endfor %}
+      <button id="customShareButton" class="glyphicon" onclick="sharePost('{{blogpost.url}}')">Share</button>
  </div>
+ <script>
+  function sharePost(postId) {
+    fetch(`/share/${postId}`)
+      .then(response => response.json())
+      .then(data => {
+        let shareUrl = "http://localhost:8000"+data.share_url;
+        window.open('https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(shareUrl));
+      })
+      .catch(error => console.error('Error:', error));
+    }
+</script>
 </body>
 </html>

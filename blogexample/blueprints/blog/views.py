@@ -1,6 +1,7 @@
 #from example.app import create_celery_app, socketio
-from flask import render_template, redirect, url_for, flash, request
+from flask import render_template, redirect, url_for, flash, request, jsonify
 from sqlalchemy import text
+import uuid
 
 from . import blog
 from .models import Post, Tag, post_tags_table
@@ -61,10 +62,10 @@ def detail(url):
     # search_query = "%{0}%".format(url)
     # print('SEARCH QUERY IS: ', search_query)
     # blogpost = Post.query.filter(Post.url.ilike(search_query)).first()
-
     blogpost = Post.query.filter(Post.search(url)).first()
-
-    return render_template('detail.html', blogpost=blogpost)#, tags=tags)
+    share_id = request.args.get("share_id")
+    # Validate the share_id in database/ trigger events
+    return render_template('detail.html', blogpost=blogpost, share_id=share_id)#, tags=tags)
 
 @blog.route('/delete/<pid>', methods=('GET', 'POST'))
 def delete_post(pid):
@@ -133,3 +134,10 @@ def view_tag(tag_requested):
     posts = Post.query.filter(Post.tags.any(Tag.tag == tag_requested))
     return render_template('posts.html', posts=posts)
 
+
+@blog.route('/share/<pid>', methods=["GET"])
+def share_post(pid): # currently pid is slug of blogdetail
+    share_id = uuid.uuid4().hex
+    # log_share_action_to_database(post_id=pid, share_id=share_id)
+    share_url = url_for('blog.detail',external=True, url=pid, share_id=share_id)
+    return jsonify({ "share_url": share_url })

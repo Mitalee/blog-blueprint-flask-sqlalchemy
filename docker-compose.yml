@@ -25,6 +25,14 @@ services:
     ports:
       - '8000:8000'
 
+  test:
+    build: .
+    volumes:
+      - .:/app
+    command: pytest -vv -W ignore::DeprecationWarning
+    depends_on:
+      - website
+
 volumes:
   postgres:
 
