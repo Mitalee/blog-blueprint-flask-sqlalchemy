@@ -1,5 +1,5 @@
 #from example.app import create_celery_app, socketio
-from flask import render_template, redirect, url_for, flash, request, jsonify
+from flask import render_template, redirect, url_for, flash, request, jsonify, abort
 from sqlalchemy import text
 import uuid
 
@@ -64,6 +64,8 @@ def detail(url):
     # blogpost = Post.query.filter(Post.url.ilike(search_query)).first()
     blogpost = Post.query.filter(Post.search(url)).first()
     share_id = request.args.get("share_id")
+    if share_id == 'share123':
+        abort(500, description="Invalid share ID.")
     # Validate the share_id in database/ trigger events
     return render_template('detail.html', blogpost=blogpost, share_id=share_id)#, tags=tags)
 

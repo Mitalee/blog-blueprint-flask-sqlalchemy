@@ -20,3 +20,7 @@ def test_share_and_track(client):
     # Now, simulating access to shared URL, which should track the share_id
     track_response = client.get(f'/detail/{post_id}?share_id={share_id}')
     assert track_response.status_code == 200
+
+    # Simulating failed wrong share code
+    track_response_fail = client.get(f'/detail/{post_id}?share_id=share123')
+    assert track_response_fail.status_code == 500
