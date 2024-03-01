@@ -41,6 +41,18 @@
   </head>
 <body>
 <div>
+
+<!-- Load Facebook SDK for JavaScript -->
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v3.0";
+  fjs.parentNode.insertBefore(js, fjs);
+  }(document, 'script', 'facebook-jssdk'));
+</script>
+
 <ul class="nav nav-tabs">
   <li role="presentation"><a href="/add">Add Posts</a></li>
 </ul>
@@ -58,6 +70,7 @@
   <div class="panel-heading">
     <div><h3 class="panel-title">{{each_post.title}}</h3></div>
     <div id="icon">  
+      <a class="glyphicon fb-share-button" style="margin-right:10px" href="/detail/{{ each_post.url }}"></a>
       <a class="glyphicon glyphicon-sunglasses" href="/detail/{{ each_post.url }}"></a>&nbsp &nbsp
       <a class="glyphicon glyphicon-pencil" href="/update/{{ each_post.id }}"></a>&nbsp &nbsp
       <a class="glyphicon glyphicon-trash" id="del" href="/delete/{{ each_post.id }}"></a>
