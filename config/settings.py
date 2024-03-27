@@ -12,3 +12,10 @@ SQLALCHEMY_DATABASE_URI = db_uri
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 REMEMBER_COOKIE_DURATION = timedelta(days=90)
+
+
+class TestConfig:
+    TESTING = True
+    DEBUG = False
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///:memory:'
+    SECRET_KEY = 'test-secret'

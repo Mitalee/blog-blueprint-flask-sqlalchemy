@@ -12,22 +12,25 @@ db = SQLAlchemy()
 # ckeditor = CKEditor()
 
 
-def create_app(main=True, debug=True):
+# app.py
+
+def create_app(config_object=None):
     """Create an application."""
     app = Flask(__name__)
-    app.config.from_object('config.settings')
 
-    app.config['SECRET_KEY'] = 'secret!'
+    if config_object is None:
+        app.config.from_object('config.settings')
+    else:
+        app.config.from_object(config_object)
 
-    
     from blogexample.blueprints.blog import blog
     app.register_blueprint(blog)
-    
+
     db.init_app(app)
-    # ckeditor.init_app(app)
 
     if app.debug:
         app.wsgi_app = DebuggedApplication(app.wsgi_app, evalex=True)
     
     return app
+
 
