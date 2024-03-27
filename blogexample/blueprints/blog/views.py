@@ -51,7 +51,6 @@ def add_post():
         if Post.create_blogpost(params):
             flash('Post has been created successfully.', 'success')
             return redirect(url_for('blog.show_posts'))
-
     return render_template('add.html', form=form, blogpost=blogpost)
 
 

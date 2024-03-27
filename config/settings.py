@@ -1,14 +1,32 @@
+import os
 from datetime import timedelta
 
-DEBUG = True
-
-SERVER_NAME = 'localhost:8000'
-SECRET_KEY = 'insecurekeyfordev'
+BASEDIR = os.path.abspath(os.path.dirname(__file__))
 
 
-# SQLAlchemy.
-db_uri = 'postgresql://flaskblog:blogpassword@postgres:5432/flaskblog'
-SQLALCHEMY_DATABASE_URI = db_uri
-SQLALCHEMY_TRACK_MODIFICATIONS = False
+class Config(object):
+    FLASK_ENV = "development"
+    SERVER_NAME = "localhost:8000"
+    DEBUG = False
+    TESTING = False
+    REMEMBER_COOKIE_DURATION = timedelta(days=90)
+    SECRET_KEY = os.getenv("SECRET_KEY", default="BAD_SECRET_KEY")
 
-REMEMBER_COOKIE_DURATION = timedelta(days=90)
+    SQLALCHEMY_DATABASE_URI = (
+        "postgresql://flaskblog:blogpassword@postgres:5432/flaskblog"
+    )
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
+
+
+class ProductionConfig(Config):
+    FLASK_ENV = "production"
+
+
+class DevelopmentConfig(Config):
+    DEBUG = True
+
+
+class TestingConfig(Config):
+    TESTING = True
+    SQLALCHEMY_DATABASE_URI = f"sqlite:///{os.path.join(BASEDIR, 'test.db')}"
+    WTF_CSRF_ENABLED = False
