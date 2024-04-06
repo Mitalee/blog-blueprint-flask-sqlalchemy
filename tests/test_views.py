@@ -19,4 +19,7 @@ def test_index_route(client):
 def test_show_posts_route(client):
     response = client.get('/posts')
     assert response.status_code == 200
+
+
+
    
