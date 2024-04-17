@@ -4,7 +4,11 @@ import os
 from flask import url_for
 
 # Add the Flask app directory to sys.path
+
 sys.path.append(os.getcwd())
+# sys.path.append("C://Users//shiva//OneDrive//Desktop//khat//blog-blueprint-flask-sqlalchemy//")
+
+
 
 # Import create_app function from app module
 from blogexample.app import create_app 
@@ -45,3 +49,6 @@ def test_index(client):
 #     assert b"Test Post" in response.data
 #     assert b"This is a test post body" in response.data
 
+
+
+# if you give me some time i can build test for all routes

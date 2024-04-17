@@ -29,36 +29,3 @@ services:
 
 volumes:
   postgres:
-
-# version: '3'
-
-# services:
-#   postgres:
-#     image: 'postgres:10.3-alpine'
-#     env_file:
-#       - '.env'
-#     environment:
-#       POSTGRES_HOST_AUTH_METHOD: trust
-#     volumes:
-#       - 'postgres:/var/lib/postgresql/data'
-#     ports:
-#       - '5432:5432'
-
-#   website:
-#     build: .
-#     command: >
-#         gunicorn -b 0.0.0.0:8000
-#         --access-logfile -
-#         --log-level=debug
-#         --reload
-#         "blogexample.app:create_app()"
-#     env_file:
-#       - '.env'
-#     volumes:
-#       - '.:/app'
-#     ports:
-#       - '8000:8000'
-
-# volumes:
-#   postgres:
-
