@@ -5,8 +5,6 @@ services:
     image: 'postgres:10.3-alpine'
     env_file:
       - '.env'
-    environment:
-        POSTGRES_HOST_AUTH_METHOD: md5
     volumes:
       - 'postgres:/var/lib/postgresql/data'
     ports:
