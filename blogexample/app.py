@@ -5,6 +5,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 from werkzeug.debug import DebuggedApplication
 
+
 # from flask_ckeditor import CKEditor#, CKEditorField
 
 
