@@ -9,6 +9,10 @@ Login/Admin related modules deliberately not implemented, and the blueprint can 
 
 * Now navigate to ```http://localhost:8000``` in the browser to test it out.
 
+## How to run tests
+
+* Run the test: `docker-compose exec website python -m pytest`
+
 ## *Optional*
 * Build a model (Posts, Tags, Comments)
 

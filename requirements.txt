@@ -20,3 +20,6 @@ WTForms-Alchemy==0.16.9
 flask_ckeditor
 
 pytz
+
+# test
+pytest==6.2.
