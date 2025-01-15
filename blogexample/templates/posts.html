@@ -6,7 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <title>Posts</title>
-   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
@@ -37,39 +38,90 @@
       #signout a{
         padding: 2px 0px 2px 20px;
       }
+      .card {
+        box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+        transition: 0.3s;
+        width: 100%;
+        margin-bottom: 20px;
+      }
+      .card:hover {
+        box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+      }
+      .container {
+        padding: 2px 16px;
+      }
+      .grid-container {
+        display: grid;
+        grid-template-columns: auto auto auto;
+        gap: 20px;
+        padding: 20px;
+      }
+      .grid-item {
+        background-color: #f1f1f1;
+        padding: 20px;
+        font-size: 30px;
+        text-align: center;
+      }
+      .navbar {
+        margin-bottom: 0;
+        border-radius: 0;
+      }
+      .navbar-brand {
+        padding: 5px 40px;
+      }
+      .navbar-nav li a {
+        padding-top: 15px;
+        padding-bottom: 15px;
+      }
     </style>
   </head>
 <body>
-<div>
-<ul class="nav nav-tabs">
-  <li role="presentation"><a href="/add">Add Posts</a></li>
-</ul>
-</div>
-{% with messages = get_flashed_messages() %}
-  {% if messages %}
-    {% for message in messages %}
-      <h3 class="flashes" align="center" style="color:#337ab7">{{ message }}</h3>
-    {% endfor %}
-  {% endif %}
-{% endwith %}
-<div class="ps">
-{% for each_post in posts %}
-<div class="panel panel-info">
-  <div class="panel-heading">
-    <div><h3 class="panel-title">{{each_post.title}}</h3></div>
-    <div id="icon">  
-      <a class="glyphicon glyphicon-sunglasses" href="/detail/{{ each_post.url }}"></a>&nbsp &nbsp
-      <a class="glyphicon glyphicon-pencil" href="/update/{{ each_post.id }}"></a>&nbsp &nbsp
-      <a class="glyphicon glyphicon-trash" id="del" href="/delete/{{ each_post.id }}"></a>
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#">My Blog</a>
     </div>
+    <ul class="nav navbar-nav">
+      <li class="active"><a href="#">Home</a></li>
+      <li><a href="#">Categories</a></li>
+      <li><a href="#">Popular Posts</a></li>
+      <li><a href="#">About</a></li>
+    </ul>
+    <form class="navbar-form navbar-right" action="/search">
+      <div class="form-group">
+        <input type="text" class="form-control" placeholder="Search">
+      </div>
+      <button type="submit" class="btn btn-default">Submit</button>
+    </form>
   </div>
-  <div class="panel-body"><p>{{ each_post.body|safe }}</p> 
-      <p>Tags: {{ each_post.tagstring }}</p>
-      <p>Published: {{ each_post.visible }}</p>
-      <p>Last updated: {{ each_post.updated_on.strftime('%m/%d/%Y') }}</p>
+</nav>
+<div class="container">
+  <div class="grid-container">
+    {% for each_post in posts %}
+    <div class="card">
+      <img src="https://via.placeholder.com/150" alt="Post Image" style="width:100%">
+      <div class="container">
+        <h4><b>{{each_post.title}}</b></h4>
+        <p>{{ each_post.body[:100] }}... <a href="/detail/{{ each_post.url }}">Read More</a></p>
+        <p>Tags: {{ each_post.tagstring }}</p>
+        <p>Published: {{ each_post.visible }}</p>
+        <p>Last updated: {{ each_post.updated_on.strftime('%m/%d/%Y') }}</p>
+        <div id="icon">
+          <a class="glyphicon glyphicon-sunglasses" href="/detail/{{ each_post.url }}"></a>&nbsp &nbsp
+          <a class="glyphicon glyphicon-pencil" href="/update/{{ each_post.id }}"></a>&nbsp &nbsp
+          <a class="glyphicon glyphicon-trash" id="del" href="/delete/{{ each_post.id }}"></a>
+        </div>
+        <div class="social-sharing">
+          <a href="#" class="fa fa-facebook"></a>
+          <a href="#" class="fa fa-twitter"></a>
+          <a href="#" class="fa fa-google"></a>
+          <a href="#" class="fa fa-linkedin"></a>
+          <a href="#" class="fa fa-pinterest"></a>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
   </div>
 </div>
-{% endfor %} 
-</div>    
 </body>
 </html>
