@@ -1,3 +1,8 @@
+<img width="1465" alt="image" src="https://github.com/user-attachments/assets/457447cb-12c0-4f27-b04a-9867a7321df6" />
+
+
+
+
 IMPORTANT: 
 Login/Admin related modules deliberately not implemented, and the blueprint can be modified for Flask-Login or Admin based fixtures.
 ## Instructions
